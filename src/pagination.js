@@ -21,5 +21,19 @@ export const PageNavigation = ({
   currentPage,
   totalPages,
 }) => {
-  
+  return (
+    <div className="page-navigation">
+      {currentPage === 0 ? null : (
+				<button onClick={previousPageHandler}>◀️ Prev</button>)}
+        {
+          currentPage + 1 >= totalPages ? null : (
+            <button onClick={nextPageHandler}>Next ▶️</button>
+            )
+        }
+        
+        <span>
+          Page {currentPage + 1} of {totalPages}
+        </span>
+    </div>
+  )
 }
