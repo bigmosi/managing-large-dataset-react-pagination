@@ -63,6 +63,29 @@ export default class Catalog extends Component {
 		this.buttonDetector = React.createRef()
 	}
 
+	componentDidMount() {
+		var options = {
+			threshold: 1.0
+		}
+
+		const observer = new IntersectionObserver(
+			this.nextPage.bind(this),
+			options
+		)
+
+		observer.observe(this.buttonDetector.current)
+	}
+
+	componentDidUpdate() {
+		const viewbox = this.buttonDetector.current.getBoundingClientRect();
+		if (
+			viewbox.top < window.innerHeight &&
+			this.state.currentPage < this.totalPages
+		) {
+			this.nextPage();
+		}
+	}
+
 	generateEvents() {
 		this.setState({
 			eventData: generateEventData(
@@ -101,7 +124,8 @@ export default class Catalog extends Component {
 			)
 		}
 
-		const filteredPages = new Pagination(filteredEvents, 5)
+		const filteredPages = new Pagination(filteredEvents, 1)
+		this.totalPages = filteredPages.getTotalPages();
 
 		return (
 			<div class="container">
@@ -138,19 +162,13 @@ export default class Catalog extends Component {
 							</thead>
 							<tbody>
 								{filteredPages
-									.getPage(this.state.currentPage)
+									.getUptoPage(this.state.currentPage)
 									.map((ed, i) => (
 										<Event data={ed} key={i} />
 									))}
 							</tbody>
 						</table>
-
-						<PageNavigation
-							nextPageHandler={this.nextPage.bind(this)}
-							previousPageHandler={this.previousPage.bind(this)}
-							currentPage={this.state.currentPage}
-							totalPages={filteredPages.getTotalPages()}
-						></PageNavigation>
+                      <div ref={this.buttonDetector}></div>
 					</div>
 					<input
 						type="number"
