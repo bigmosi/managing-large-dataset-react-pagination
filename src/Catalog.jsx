@@ -60,6 +60,7 @@ export default class Catalog extends Component {
 		super(props)
 		this.generatorNumberInput = React.createRef()
 		this.filterInput = React.createRef()
+		this.buttonDetector = React.createRef()
 	}
 
 	generateEvents() {
